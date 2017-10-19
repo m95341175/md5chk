@@ -1,43 +1,30 @@
 #!/usr/bin/env sh
 #
-# md5sum
+# Replacement for md5sum on macOS. This script offers the additional feature to
+# scan an external file for filenames and the coorresponding MD5 hashes.
 #
-# This function is a substitution of md5sum -c for OS which couldn't have md5sum
-#
-# Copyright (c) 2011-2015, Joris Berthelot
-# Joris Berthelot <admin@eexit.net>
-# 
-# Permission is hereby granted, free of charge, to any person obtaining a copy of
-# this software and associated documentation files (the "Software"), to deal in
-# the Software without restriction, including without limitation the rights to
-# use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-# of the Software, and to permit persons to whom the Software is furnished to do
-# so, subject to the following conditions:
-# 
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-# 
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
 
 VERSION=2.01
 DATE=2017-10-19
 QUIET=false
 ERROR=0
+thisName=${0##*/}
 
 usage() {
-    echo "Invalid option: -$OPTARG" >&2
-    echo
+    if [ "$1" == "invalid" ]; then
+        echo "Invalid option: -$OPTARG" >&2
+        echo
+    fi
     echo "SYNOPSIS"
-    echo "\tmd5sum [-q] source_file"
-    echo "\tmd5sum [-v] [-h]"
-    exit 0
+    echo "\t${thisName} [-q] FILE"
+    echo "\t${thisName} [-v] [-h]"
+    echo
 }
+
+if [ -z "$1" ] || [ "$1" = "help" ] || [ $# -ge 3 ]; then
+    usage
+    exit 0
+fi
 
 while getopts ":qhv" OPT; do
     case $OPT in
@@ -45,50 +32,47 @@ while getopts ":qhv" OPT; do
             QUIET=true
             ;;
         v)
-            echo "md5sum -- v$VERSION -- $DATE"
+            echo "${thisName} -- v$VERSION -- $DATE"
+            echo
             exit 0
             ;;
         h)
-            echo "\t\t\tmd5sum -- v$VERSION"
+            echo "${thisName} -- v$VERSION"
             echo
-            echo "SYNOPSIS"
-            echo "\tmd5sum [-q] source_file"
-            echo "\tmd5sum [-v] [-h]"
-            echo
+            usage
             echo "DESCRIPTION"
-            echo "\tReads MD5 (128-bits) checksums in the file and compare them to the files"
+            echo "\tReads MD5 (128-bits) checksums and filenames in FILE and check them"
             echo
-            echo "\t-q"
-            echo "\t\tQuiet mode. Don't print OK messages or warnings messages"
+            echo "\t-q\tQuiet mode, only prints mismatched hashes"
             echo
-            echo "\t-h"
-            echo "\t\tDisplays this help and exits"
+            echo "\t-h\tDisplays this help and exits"
             echo
-            echo "\t-v"
-            echo "\t\tOutputs the version information and exits"
+            echo "\t-v\tDisplays version info"
             echo
             echo "AUTHOR"
-            echo "\tWritten by Joris Berthelot <admin@eexit.net>"
+            echo "\tOriginally written by Joris Berthelot <admin@eexit.net>"
             echo "\thttps://github.com/eexit/md5sum"
+            echo "\tImproved by Mel Lowiz"
+            echo "\thttps://github.com/mellowiz/md5sum"
             echo
             echo "COPYRIGHT"
             cat << EOT
-        Copyright (c) 2011-2015, Joris Berthelot
-        Original URL: https://github.com/eexit/md5sum
+        Copyright (c) 2017, Mel Lowiz <mellowiz@hotmail.com>
+                 2011-2015, Joris Berthelot <admin@eexit.net>
 EOT
             echo
             exit 0
             ;;
         \?)
-            usage
+            usage invalid
             ;;
     esac
 done
 
-# Loops on each args
+# Loops on each argument
 for ARG in $*; do
     
-    # Checkes arg filename existence
+    # Checks arg filename existence
     if [ ! -e "$ARG" ]; then
         if [[ "-q" != "$ARG" ]]; then
             echo "md5sum: "$ARG": No such filename"
@@ -97,7 +81,7 @@ for ARG in $*; do
         continue
     fi
     
-    # Checkes if file content has at least one checksum pattern
+    # Checks if file content has at least one checksum pattern
     if [ 0 -eq "$(grep -csxE "^\w{32}\s(\s|\*).+$" "$ARG")" ]; then
         if ! $QUIET ; then
             echo "[  \033[0;33m!!\033[0m  ] "$ARG": No valid MD5 checksum entry found"
@@ -109,7 +93,7 @@ for ARG in $*; do
     # Loops on file lines
     while read LINE; do
         
-        # Checkes if the current line has a checksum pattern
+        # Checks if the current line has a checksum pattern
         if [[ $(echo "$LINE" | grep -sxE "^\w{32}\s(\s|\*).+$") ]]; then
             
             # Gets the file name of the line
@@ -125,7 +109,7 @@ for ARG in $*; do
                 continue
             fi
 
-            # Checkes if the MD5 sum of the file is the expected one
+            # Checks if the MD5 sum of the file is the expected one
             if [[ "$MD5SUM" == $(md5 -q "$CFILE") ]]; then
                 # If verbose output
                 if ! $QUIET ; then
