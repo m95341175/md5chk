@@ -1,12 +1,19 @@
+### Empty input
 ```
 $ ./md5sum.sh
 SYNOPSIS
   md5sum.sh [-q] FILE
   md5sum.sh [-v] [-h]
+```
 
+### Version
+```
 $ ./md5sum.sh -v
 md5sum.sh -- v2.01 -- 2017-10-19
+```
 
+### Help
+```
 $ ./md5sum.sh -h
 md5sum.sh -- v2.01
 
@@ -32,7 +39,10 @@ AUTHOR
 COPYRIGHT
         Copyright (c) 2017, Mel Lowiz <mellowiz@hotmail.com>
                  2011-2015, Joris Berthelot <admin@eexit.net>
+```
 
+### Typical output
+```
 $ ./md5sum.sh hashes.test
 [  OK  ] test/a.txt
 [  OK  ] test/b.txt
