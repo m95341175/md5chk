@@ -41,7 +41,7 @@ while getopts ":qhv" OPT; do
             echo
             usage
             echo "DESCRIPTION"
-            echo "\tReads MD5 (128-bits) checksums and filenames in FILE and check them"
+            echo "\tReads MD5 (128-bits) checksums and filenames in FILE and checks them"
             echo
             echo "\t-q\tQuiet mode, only prints mismatched hashes"
             echo
@@ -52,7 +52,7 @@ while getopts ":qhv" OPT; do
             echo "AUTHOR"
             echo "\tOriginally written by Joris Berthelot <admin@eexit.net>"
             echo "\thttps://github.com/eexit/md5sum"
-            echo "\tImproved by Mel Lowiz"
+            echo "\tImproved by Mel Lowiz <mellowiz@hotmail.com>"
             echo "\thttps://github.com/mellowiz/md5sum"
             echo
             echo "COPYRIGHT"

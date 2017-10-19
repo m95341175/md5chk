@@ -1,31 +1,27 @@
-# md5sum for OSX
+# md5sum for macOS
 
-![example.png](example.png)
-		
 ## Installation
 
 ```bash
-sudo curl https://raw.githubusercontent.com/eexit/md5sum/master/md5sum -o /sbin/md5sum
-sudo chmod a+x /sbin/md5sum
+git clone https://github.com/mellowiz/md5sum.git
+cd <directory>
+sudo chmod a+x md5sum.sh
 ```
 
 ## Usage
 
 ### Synopsis
 
-	md5sum [-q] source_file
+	md5sum [-q] FILE
 	md5sum [-v] [-h]
 
-Reads MD5 (128-bits) checksums in the file and compare them to the files
+Reads MD5 (128-bits) checksums and filenames in FILE and checks them
 
-	-q
-		Quiet mode. Don't print OK messages or warnings messages
+	-q	Quiet mode, only prints mismatched hashes
 
-	-h
-		Displays this help and exits
+	-h	Displays this help and exits
 
-	-v
-		Outputs the version information and exits
+	-v	Displays version info
 
 ## How to generate a valid MD5SUMS file
 
@@ -53,5 +49,7 @@ f9e4c933069ab3c67006dbbd8e9a8840  README.md
 
 ### Author
 
-Written by Joris Berthelot <admin@eexit.net>  
-https://github.com/eexit/md5sum
+  Originally written by Joris Berthelot <admin@eexit.net>
+  https://github.com/eexit/md5sum
+  Improved by Mel Lowiz <mellowiz@hotmail.com>
+  https://github.com/mellowiz/md5sum
